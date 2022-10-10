@@ -1,17 +1,10 @@
 import { Outlet, Link } from 'react-router-dom';
 import AuthConsumer from '../hooks/auth';
-
-export const LoginPage = () => {
-  return (
-    <div>
-      <h1>Login Component</h1>
-    </div>
-  );
-};
+/** All Components */
 
 export const HomePage = () => {
-  const auth = AuthConsumer();
-  console.log(auth);
+  const [authed, dispatch] = AuthConsumer();
+  console.log(authed);
   return (
     <main>
       <h1 className="text-center my-3 bg-yellow-400 text-gray-700 w-40 mx-auto rounded">
@@ -22,6 +15,24 @@ export const HomePage = () => {
         <Outlet></Outlet>
       </div>
     </main>
+  );
+};
+
+export const LoginPage = () => {
+  const [authed, dispatch] = AuthConsumer();
+  console.log(authed);
+  return (
+    <div>
+      <h1>This is the Login Page</h1>
+      <button
+        className="broder px-5 bg-indigo-500 text-gray-50 rounded"
+        onClick={() => {
+          dispatch({ type: 'login' });
+        }}
+      >
+        Login
+      </button>
+    </div>
   );
 };
 
@@ -45,9 +56,18 @@ export const Nav = () => {
 };
 
 export const Dashboard = () => {
+  const [, dispatch] = AuthConsumer();
   return (
     <div>
-      <h1>Dashboard Component</h1>
+      <h1>This is the Dashboard Component</h1>
+      <button
+        className="broder px-5 bg-indigo-500 text-gray-50 rounded"
+        onClick={() => {
+          dispatch({ type: 'logout' });
+        }}
+      >
+        Logout
+      </button>
     </div>
   );
 };
