@@ -1,4 +1,10 @@
-import { Outlet, NavLink, useNavigate } from 'react-router-dom';
+import {
+  Outlet,
+  NavLink,
+  useNavigate,
+  useLocation,
+  Navigate,
+} from 'react-router-dom';
 import AuthConsumer from '../hooks/auth';
 /** All Components */
 
@@ -19,6 +25,7 @@ export const HomePage = () => {
 
 export const LoginPage = () => {
   const [authed, dispatch] = AuthConsumer();
+  console.log(authed);
   let navigate = useNavigate();
   return (
     <div>
@@ -45,6 +52,8 @@ export const HomeContent = () => {
 };
 
 export const Nav = () => {
+  const [{ auth }] = AuthConsumer();
+
   function ActiveLink(props) {
     return (
       <NavLink
@@ -62,8 +71,14 @@ export const Nav = () => {
     <nav className="flex bg-indigo-500 text-gray-50 gap-4 justify-center">
       <ActiveLink to={'/'}>Home</ActiveLink>
       <ActiveLink to={'/login'}>Login</ActiveLink>
-      <ActiveLink to={'/dashboard'}>Dashboard</ActiveLink>
-      <ActiveLink to={'/settings'}>Settings</ActiveLink>
+      {auth ? (
+        <>
+          <ActiveLink to={'/dashboard'}>Dashboard</ActiveLink>
+          <ActiveLink to={'/settings'}>Settings</ActiveLink>
+        </>
+      ) : (
+        <></>
+      )}
     </nav>
   );
 };
@@ -105,3 +120,17 @@ export const Settings = () => {
     </div>
   );
 };
+
+export function RequireAuth({ children }) {
+  const [authed] = AuthConsumer();
+  const location = useLocation();
+  return authed.auth === true ? (
+    children
+  ) : (
+    <Navigate
+      to={'/login'}
+      replace
+      state={{ path: location.pathname }}
+    ></Navigate>
+  );
+}

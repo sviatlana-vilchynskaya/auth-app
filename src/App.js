@@ -1,11 +1,12 @@
 import './App.css';
-import { useRoutes } from 'react-router-dom';
+import { useRoutes, Outlet } from 'react-router-dom';
 import {
+  LoginPage,
   HomePage,
   HomeContent,
-  LoginPage,
-  Settings,
   Dashboard,
+  Settings,
+  RequireAuth,
 } from './components/global';
 
 function App() {
@@ -24,11 +25,19 @@ function App() {
         },
         {
           path: '/dashboard',
-          element: <Dashboard></Dashboard>,
+          element: (
+            <RequireAuth>
+              <Dashboard />
+            </RequireAuth>
+          ),
         },
         {
           path: '/settings',
-          element: <Settings />,
+          element: (
+            <RequireAuth>
+              <Settings />
+            </RequireAuth>
+          ),
         },
       ],
     },
